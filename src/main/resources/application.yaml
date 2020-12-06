@@ -1,0 +1,119 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: boots-atomikos
+  jackson:
+    timeZone: GMT+8
+    dateFormat: yyyy-MM-dd HH:mm:ss
+    generator:
+      writeNumbersAsStrings: true
+  datasource:
+    type: com.alibaba.druid.pool.xa.DruidXADataSource
+    druid:
+      # 主库数据源
+      first:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/bigdata?autoReconnect=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        username: root
+        password: alibabaRoot
+        # 初始连接数
+        initialSize: 5
+        # 最小连接池数量
+        minIdle: 10
+        # 最大连接池数量
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 300000
+        # 配置一个连接在池中最大生存的时间，单位是毫秒
+        maxEvictableIdleTimeMillis: 900000
+        # 配置检测连接是否有效
+        validationQuery: SELECT 1 FROM DUAL
+        validationQueryTimeout: 10000
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        webStatFilter:
+          enabled: true
+        statViewServlet:
+          enabled: true
+          # 设置白名单，不填则允许所有访问
+          allow:
+          url-pattern: /druid/*
+          # 控制台管理用户名和密码
+          login-username:
+          login-password:
+        filters: stat,wall,log4j2
+      # 从库数据源
+      second:
+        # 从数据源开关/默认关闭
+        enabled: false
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/plat?autoReconnect=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        username: root
+        password: alibabaRoot
+        # 初始连接数
+        initialSize: 5
+        # 最小连接池数量
+        minIdle: 10
+        # 最大连接池数量
+        maxActive: 20
+        # 配置获取连接等待超时的时间
+        maxWait: 60000
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        minEvictableIdleTimeMillis: 300000
+        # 配置一个连接在池中最大生存的时间，单位是毫秒
+        maxEvictableIdleTimeMillis: 900000
+        # 配置检测连接是否有效
+        validationQuery: SELECT 1 FROM DUAL
+        validationQueryTimeout: 10000
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        webStatFilter:
+          enabled: true
+        statViewServlet:
+          enabled: true
+          # 设置白名单，不填则允许所有访问
+          allow:
+          url-pattern: /druid/*
+          # 控制台管理用户名和密码
+          login-username:
+          login-password:
+        filters: stat,wall,log4j2
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:/mappers/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.java.boots.atomikos.business.*.entity
+  global-config:
+    db-config:
+      id-type: auto
+      table-underline: true
+#      select-strategy: not_empty
+      #逻辑删除配置
+      logic-delete-value: Y
+      logic-not-delete-value: N
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+
+jasypt:
+  encryptor:
+    password: root
+    algorithm: PBEWithMD5AndDES
+    string-output-type: hexadecimal
+
